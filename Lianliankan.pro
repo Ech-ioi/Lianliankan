@@ -6,10 +6,17 @@ FORMS += \
 
 HEADERS += \
     game.h \
-    home.h
+    home.h \
+    manage.h \
+    enter.h \
+    class.h
 
 SOURCES += \
     game.cpp \
     main.cpp \
-    home.cpp
+    home.cpp \
+    manage.cpp \
+    enter.cpp
+
+RC_ICONS = F:/Lianliankan/pic_manage/myico.ico
 
