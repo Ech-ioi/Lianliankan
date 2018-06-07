@@ -14,16 +14,16 @@ public:
     Enter(QWidget *parent = 0);
     QPushButton *startButton;
     User *user;
-signals:
+signals://设置某一信号的对应动作
     void EnterGame(const QString &str,Qt::CaseSensitivity cs);
     void EnterPrevious(const QString &str,Qt::CaseSensitivity cs);
 
-private slots:
+private slots://？
     void enableFindButton(const QString &text);
     void startClicked();
 
 private:
-    QLabel *label;
+    QLabel *label;//*?
     QLineEdit *lineEdit;
     QPushButton *returnButton;
 

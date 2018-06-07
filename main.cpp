@@ -1,3 +1,5 @@
+//version-1.0.0
+
 #include <QApplication>
 #include <QWidget>
 #include "game.h"

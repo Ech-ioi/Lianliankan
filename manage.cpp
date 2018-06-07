@@ -6,6 +6,7 @@
 #include "QPushButton"
 #include "enter.h"
 #include <iostream>
+#include <time.h>
 
 
 //Manage::Manage(QObject *parent) : QObject(parent)
@@ -16,9 +17,58 @@ Manage::Manage()
     setStartWindow();
 }
 Manage::~Manage(){
-    if(isStart==0){
+    if(isStart==1){
+        del_game();
+        delete window;
+    }
+    else if(isStart==0){
         del_start();
         delete window;
+    }
+}
+
+void Manage::createmap(){
+    std::count<<"createmap"<<std::endl;
+    int b[MaxSizeX*MaxSizeY];
+    int i,j,k;
+
+    for(int i=0;i<MaxSizeX*MaxSizeY;i+=4){
+        b[i]=b[i+1]=b[i+2]=b[i+3]=i/4+1;//35*4=140
+    }
+    //产生这样的序列：
+    //[1 1 1 1] [2 2 2 2]....用来在后面打乱并插入图片
+    srand((unsigned)time(NULL));
+    std::random_shuffle(b,b+MaxSizeX*MaxSizeY);//对元素序列进行重新排序（随机的）
+    //随机数是通过一个算法产生的，当它的初始种子确定后，后面的序列是一定的
+    //。要让它变化，只能通过srand重设种子，同时种子要与时间相关，这样就达到随机了。
+    k=0;
+    memset(map,0,sizeof(map));
+    for(i=1;i<=MaxSizeX;i++){
+        for(j=1;j<MaxSizeY;j++){
+            map[i][j]=b[k++];
+        }
+    }
+}
+
+void Manage::recreate(){
+    std::cout<<"recreate map"<<std::endl;
+    int b[MaxSizeX*MaxSizeY];
+    int i,j;
+    int k=0;
+    int temp;
+
+    for(i=1;i<=MaxSizeX;i++){
+        for(j=1;j<=MaxSizeY;j++){
+            b[k++]=map[i][j];
+        }
+    }
+    srand((unsigned)time(NULL));
+    for(i=1;i<MaxSizeX*MaxSizeY;i++){
+        if(b[i]==0)
+            continue;
+        j=rand()%(i+1);
+        k=2;
+
     }
 }
 
@@ -82,6 +132,22 @@ void Manage::del_start()
 void Manage::start_normal(){
     isAI=false;
     Enter *start=new Enter;
-    start.show();
-
+    start->show();
+    connect(start->startButton,SIGNAL(clicked()),this,SLOT(startGame()));
 }
+
+void Manage::start_de
+
+
+
+
+
+
+
+
+
+
+
+
+
+

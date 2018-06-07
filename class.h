@@ -2,6 +2,7 @@
 #define CLSS_H
 #include <QDialog>
 
+//定义用户类User
 class User
 {
 public:
@@ -22,6 +23,8 @@ private:
     double time;
 };
 
+
+//保存一个需要储存当前用户名及时间的变量user
 class eUser
 {
 public:
