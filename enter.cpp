@@ -9,11 +9,12 @@
 #include <QHBoxLayout>
 #include <QVBoxLayout>
 #include <QLineEdit>
+#include <iostream>
 
 User::User(char* name="NULL",double time=10000)
 {
     this->name=(char*)malloc(strlen(name)+1);
-    strcp(this->name,name);
+    strcpy(this->name,name);
     this->time=time;
 }
 User::~User(){
@@ -53,7 +54,7 @@ void User::Game_End(QString qname,double now_time){
     ch=ba.data();
 
     User allname[6];//6个？
-    User temp(ch,noew_time);
+    User temp(ch,now_time);
 
     //......
 }
@@ -84,7 +85,7 @@ Enter::Enter(QWidget *parent):
     QVBoxLayout *mainLayout=new QVBoxLayout;
     mainLayout->addWidget(label);
     mainLayout->addWidget(lineEdit);
-    mainLayout->addWidget(lastButton);
+    mainLayout->addLayout(lastButton);
     setLayout(mainLayout);
 
     setWindowTitle(tr("Enter"));

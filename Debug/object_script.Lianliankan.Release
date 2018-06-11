@@ -1,0 +1,15 @@
+INPUT(
+./release\game.o
+./release\main.o
+./release\home.o
+./release\manage.o
+./release\enter.o
+./release\button.o
+./release\displaytime.o
+./release\player.o
+./release\moc_game.o
+./release\moc_home.o
+./release\moc_manage.o
+./release\moc_enter.o
+./release\moc_button.o
+);

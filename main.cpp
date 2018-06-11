@@ -1,4 +1,6 @@
-//version-1.0.0
+//version-2.0.0
+//实现对消
+//待实现：音乐播放 提示功能 倒计时 用户成绩记录
 
 #include <QApplication>
 #include <QWidget>
@@ -7,17 +9,6 @@
 #include "manage.h"
 int main(int argc,char *argv[]){
     QApplication a(argc,argv);
-//    game g;
-//    g.resize(1200,900);
-//    g.setWindowTitle("连连看");
-//    Home home;
-//    if(home.exec()==QDialog::Accepted){
-//        g.show();
-//        return a.exec();
-//    }
-//    else{
-//        return 0;
-//    }
     Manage manage;
     return a.exec();
 

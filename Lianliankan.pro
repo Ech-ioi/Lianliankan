@@ -9,14 +9,20 @@ HEADERS += \
     home.h \
     manage.h \
     enter.h \
-    class.h
+    class.h \
+    button.h \
+    displaytime.h \
+    player.h
 
 SOURCES += \
     game.cpp \
     main.cpp \
     home.cpp \
     manage.cpp \
-    enter.cpp
+    enter.cpp \
+    button.cpp \
+    displaytime.cpp \
+    player.cpp
 
 RC_ICONS = F:/Lianliankan/pic_manage/myico.ico
 
