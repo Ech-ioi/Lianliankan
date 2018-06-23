@@ -99,7 +99,7 @@ void Enter::startClicked(){
     ch=ba.data();
     eUser::user.set_name(ch);
     eUser::user.qname=text;
-    std::cout<<"now user's name is"<<eUser::user.Get_Name()<<endl;
+    std::cout<<"now user's name is "<<eUser::user.Get_Name()<<std::endl;
     close();
 }
 

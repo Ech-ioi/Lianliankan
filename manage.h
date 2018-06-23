@@ -12,7 +12,11 @@
 #include "player.h"
 #include "displaytime.h"
 #include "iostream"
+#include "player.h"
+#include "show.h"
 
+//一个库是二进制兼容的，如果一个程序和某个库的某个版本动态链接，并且不需要重新编译，即可在安装有该库较新版本的环境中运行。为什么要保证二进制兼容性？
+//如果不能保证库的二进制兼容性，就意味着每次发布新版本时，依赖该库的所有程序都必须重新编译才能正常运行。显然，这对于像Qt这样被广泛采用的库而言是完全不可接受的。
 class Manage : public QObject
 {
     Q_OBJECT
@@ -43,8 +47,7 @@ private:
     QPushButton *block[2*MaxSizeX + 2*MaxSizeY + 4];//地图边缘
     Button *image[MaxSizeX][MaxSizeY];//图片按钮
     QWidget *window;//主窗口
-    QPushButton *changebutton,*tipbutton,*aibutton;
-    //待实现
+    QPushButton *changebutton,*tipbutton,*aibutton,*menubutton,*musicbutton;
     Displaytime *timer;
 
     QPushButton *startbutton;
@@ -53,11 +56,13 @@ private:
     QPushButton *quitbutton;
 
     Player *sound;
+    int soundnum;
 
     void createmap();
     void setlayout();
     void setimage();
     void setblock();
+
 
     inline void initialbucket(){
         std::cout<<"initialbucket"<<std::endl;
@@ -83,7 +88,6 @@ private:
     void del_game();//清除游戏界面
 
 public:
-    //explicit Manage(QObject *parent = 0);
     Manage();
     virtual ~Manage();
     int imageNum;////记录屏幕上图片个数
@@ -102,6 +106,8 @@ private slots:
     void showGrade();//显示成绩
     void startGame();//开始游戏
     void quitGame();//退出游戏
+    void gotoMenu();
+    void changeMusicVol();
 };
 
 #endif // MANAGE_H

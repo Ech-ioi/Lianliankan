@@ -1,6 +1,6 @@
-//version-2.0.0
-//实现对消
-//待实现：音乐播放 提示功能 倒计时 用户成绩记录
+//version-3.0.0
+//实现 对消 音乐播放 音乐播放
+//待实现：用户成绩记录 消除路线显示
 
 #include <QApplication>
 #include <QWidget>

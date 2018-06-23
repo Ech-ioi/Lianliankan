@@ -8,16 +8,19 @@
 #include <QMessageBox>
 #include <iostream>
 #include <time.h>
-
+using namespace std;
 
 //Manage::Manage(QObject *parent) : QObject(parent)
 Manage::Manage()
 {
+    cout<<"Manage"<<endl;
     window=0;
     isStart=2;
+    soundnum=1;
     setStartWindow();
 }
 Manage::~Manage(){
+    cout<<"~Manage"<<endl;
     if(isStart==1){
         del_game();
         delete window;
@@ -34,7 +37,7 @@ void Manage::createmap(){
     int i,j,k;
 
     for(int i=0;i<MaxSizeX*MaxSizeY;i+=4){
-        b[i]=b[i+1]=b[i+2]=b[i+3]=i/4+1;//35*4=140
+        b[i]=b[i+1]=b[i+2]=b[i+3]=i/4+1;//1~36
     }
     //产生这样的序列：
     //[1 1 1 1] [2 2 2 2]....用来在后面打乱并插入图片
@@ -60,7 +63,8 @@ void Manage::recreate(){
 
     for(i=1;i<=MaxSizeX;i++){
         for(j=1;j<=MaxSizeY;j++){
-            b[k++]=map[i][j];
+            b[k]=map[i][j];
+            k++;
         }
     }
     srand((unsigned)time(NULL));
@@ -80,7 +84,8 @@ void Manage::recreate(){
     k=0;
     for(i=1;i<=MaxSizeX;i++){
         for(j=1;j<=MaxSizeY;j++){
-            map[i][j]=b[k++];
+            map[i][j]=b[k];
+            k++;
         }
     }
     for(i=0;i<MaxSizeX;i++){
@@ -93,11 +98,11 @@ void Manage::recreate(){
     }
     setimage();
     initialbucket();
-//    if(!judge())recreate();
+    if(!judge()) recreate();
 }
 
 void Manage::del_game(){
-    std::cout<<"manage::~manage()"<<std::endl;
+    std::cout<<"del_game"<<std::endl;
     int i,j;
     for(i=0;i<MaxSizeX;i++){
         for(j=0;j<MaxSizeY;j++){
@@ -114,15 +119,19 @@ void Manage::del_game(){
     delete tipbutton;
     if(isAI)delete aibutton;
     delete timer;
+    delete menubutton;
+    delete musicbutton;
+    sound->stop();
 
     delete gridlayout;
     delete vlayout;
     delete hlayout1;
+    delete window;
 }
 
 void Manage::del_start()
 {
-    std::cout<<"game::~game()"<<std::endl;
+    std::cout<<"del_start"<<std::endl;
     delete startbutton;
     delete gradebutton;
     delete hlayout1;
@@ -142,33 +151,34 @@ void Manage::change(int num){//接收点击图片的坐标并作出判断
         x1=x;
         y1=y;
         vis=second;
-//        sound->play1();
-//        sound->stop1();
+        sound->play1();
+        sound->stop1();
     }
     else if(vis==second){
         x2=x;
         y2=y;
-        if(x1==x2&&y1==y2){
-//        sound->play1();
-//        sound->stop1();
+        if(x1==x2&&y1==y2){//防止在一个点重复两次选择
+        sound->play1();
+        sound->stop1();
         }
-        else if(ok()){
+        else if(ok()){//可以消去
             del(map[x1][y1],x1,y1);
-            del(map[x1][y1],x2,y2);//?
-            delete image[x1-1][y1-1];
+            del(map[x1][y1],x2,y2);
+            delete image[x1-1][y1-1];//删除图片
             delete image[x2-1][y2-1];
-            delete signalMapper[x1-1][y1-1];
+            delete signalMapper[x1-1][y1-1];//删除中转站
             delete signalMapper[x2-1][y2-1];
-            map[x1][y1]=0;
+            map[x1][y1]=0;//修改地图
             map[x2][y2]=0;
             imageNum-=2;
             std::cout<<imageNum<<std::endl;
-            if(imageNum==0){
+            if(imageNum==0){//游戏结束
                 QMessageBox msg;
-//                timer->end();
-//                sound->stop();
-//                ftime=timer->count();
-//                eUser::user.Game_End(eUser::user.qname,ftime);
+                timer->end();
+                sound->stop();
+                ftime=timer->count;
+                eUser::user.Game_End(eUser::user.qname,ftime);
+                cout<<"time:"<<ftime<<endl;
                 msg.setText(tr("You win!"));
                 msg.exec();
                 del_game();
@@ -182,9 +192,9 @@ void Manage::change(int num){//接收点击图片的坐标并作出判断
                 recreate();
             }
         }
-        else{
-//            sound->paly1();
-//            sound->stop1();
+        else{//不可以消去
+            sound->play1();
+            sound->stop1();
         }
         vis=first;
     }
@@ -192,10 +202,101 @@ void Manage::change(int num){//接收点击图片的坐标并作出判断
 
 void Manage::show()//用红圈标出两个可连接的图标
 {
+    std::cout<<"show"<<std::endl;
+    QString str3[]={"F:/Lianliankan/game/1_1.png",
+                    "F:/Lianliankan/game/2_1.png",
+                    "F:/Lianliankan/game/3_1.png",
+                    "F:/Lianliankan/game/4_1.png",
+                    "F:/Lianliankan/game/5_1.png",
+                    "F:/Lianliankan/game/6_1.png",
+                    "F:/Lianliankan/game/7_1.png",
+                    "F:/Lianliankan/game/8_1.png",
+                    "F:/Lianliankan/game/9_1.png",
+                    "F:/Lianliankan/game/10_1.png",
+                    "F:/Lianliankan/game/11_1.png",
+                    "F:/Lianliankan/game/12_1.png",
+                    "F:/Lianliankan/game/13_1.png",
+                    "F:/Lianliankan/game/14_1.png",
+                    "F:/Lianliankan/game/15_1.png",
+                    "F:/Lianliankan/game/16_1.png",
+                    "F:/Lianliankan/game/17_1.png",
+                    "F:/Lianliankan/game/18_1.png",
+                    "F:/Lianliankan/game/19_1.png",
+                    "F:/Lianliankan/game/20_1.png",
+                    "F:/Lianliankan/game/21_1.png",
+                    "F:/Lianliankan/game/22_1.png",
+                    "F:/Lianliankan/game/23_1.png",
+                    "F:/Lianliankan/game/24_1.png",
+                    "F:/Lianliankan/game/25_1.png",
+                    "F:/Lianliankan/game/26_1.png",
+                    "F:/Lianliankan/game/27_1.png",
+                    "F:/Lianliankan/game/28_1.png",
+                    "F:/Lianliankan/game/29_1.png",
+                    "F:/Lianliankan/game/30_1.png",
+                    "F:/Lianliankan/game/31_1.png",
+                    "F:/Lianliankan/game/32_1.png",
+                    "F:/Lianliankan/game/33_1.png",
+                    "F:/Lianliankan/game/34_1.png",
+                    "F:/Lianliankan/game/35_1.png",
+                    "F:/Lianliankan/game/36_1.png"};
+    QString str1[]={"F:/Lianliankan/game/1_2.png",
+                    "F:/Lianliankan/game/2_2.png",
+                    "F:/Lianliankan/game/3_2.png",
+                    "F:/Lianliankan/game/4_2.png",
+                    "F:/Lianliankan/game/5_2.png",
+                    "F:/Lianliankan/game/6_2.png",
+                    "F:/Lianliankan/game/7_2.png",
+                    "F:/Lianliankan/game/8_2.png",
+                    "F:/Lianliankan/game/9_2.png",
+                    "F:/Lianliankan/game/10_2.png",
+                    "F:/Lianliankan/game/11_2.png",
+                    "F:/Lianliankan/game/12_2.png",
+                    "F:/Lianliankan/game/13_2.png",
+                    "F:/Lianliankan/game/14_2.png",
+                    "F:/Lianliankan/game/15_2.png",
+                    "F:/Lianliankan/game/16_2.png",
+                    "F:/Lianliankan/game/17_2.png",
+                    "F:/Lianliankan/game/18_2.png",
+                    "F:/Lianliankan/game/19_2.png",
+                    "F:/Lianliankan/game/20_2.png",
+                    "F:/Lianliankan/game/21_2.png",
+                    "F:/Lianliankan/game/22_2.png",
+                    "F:/Lianliankan/game/23_2.png",
+                    "F:/Lianliankan/game/24_2.png",
+                    "F:/Lianliankan/game/25_2.png",
+                    "F:/Lianliankan/game/26_2.png",
+                    "F:/Lianliankan/game/27_2.png",
+                    "F:/Lianliankan/game/28_2.png",
+                    "F:/Lianliankan/game/29_2.png",
+                    "F:/Lianliankan/game/30_2.png",
+                    "F:/Lianliankan/game/31_2.png",
+                    "F:/Lianliankan/game/32_2.png",
+                    "F:/Lianliankan/game/33_2.png",
+                    "F:/Lianliankan/game/34_2.png",
+                    "F:/Lianliankan/game/35_2.png",
+                    "F:/Lianliankan/game/36_2.png"};
+
+    delete image[x3-1][y3-1];
+    delete image[x4-1][y4-1];
+    delete signalMapper[x3-1][y3-1];
+    delete signalMapper[x4-1][y4-1];
+    signalMapper[x3-1][y3-1]=new QSignalMapper;
+    signalMapper[x4-1][y4-1]=new QSignalMapper;
+    image[x3-1][y3-1]=createButton(str1[map[x3][y3]-1],str1[map[x3][y3]-1],str3[map[x3][y3]-1]);
+    image[x4-1][y4-1]=createButton(str1[map[x4][y4]-1],str1[map[x4][y4]-1],str3[map[x4][y4]-1]);
+    gridlayout->addWidget(image[x3-1][y3-1],x3,y3);
+    gridlayout->addWidget(image[x4-1][y4-1],x4,y4);
+    connect(image[x3-1][y3-1],SIGNAL(clicked()),signalMapper[x3-1][y3-1],SLOT(map()));
+    connect(image[x4-1][y4-1],SIGNAL(clicked()),signalMapper[x4-1][y4-1],SLOT(map()));
+    signalMapper[x3-1][y3-1]->setMapping(image[x3-1][y3-1],100*(x3-1)+y3-1);
+    signalMapper[x4-1][y4-1]->setMapping(image[x4-1][y4-1],100*(x4-1)+y4-1);
+    connect(signalMapper[x3-1][y3-1],SIGNAL(mapped(int)),this,SLOT(change(int)));
+    connect(signalMapper[x4-1][y4-1],SIGNAL(mapped(int)),this,SLOT(change(int)));
 
 }
 
 void Manage::setStartWindow(){
+    cout<<"setStartWindow"<<endl;
     isStart=0;
     window=new QWidget;
     window->setAutoFillBackground(true);
@@ -248,10 +349,13 @@ void Manage::setStartWindow(){
 
 void Manage::ai()
 {
-
+    cout<<"ai"<<endl;
+    change(100*(x3-1)+y3-1);
+    change(100*(x4-1)+y4-1);
 }
 
 void Manage::start_normal(){
+    cout<<"start_normal"<<endl;
     isAI=false;
     Enter *start=new Enter;
     start->show();
@@ -259,6 +363,7 @@ void Manage::start_normal(){
 }
 
 void Manage::start_debug(){
+    cout<<"start_debug"<<endl;
     isAI=true;
     Enter *start=new Enter;
     start->show();
@@ -266,6 +371,7 @@ void Manage::start_debug(){
 }
 
 void Manage::startGame(){
+    std::cout<<"startGame"<<std::endl;
     isStart=1;
     delete startbutton;
     delete gradebutton;
@@ -279,16 +385,18 @@ void Manage::startGame(){
     createmap();
     initialbucket();
     setlayout();
-//    sound->paly();
+
 
 }
 
 void Manage::showGrade(){
-//    Show *p=new Show();//.....
-//    p->show();//.........
+    std::cout<<"showGrade"<<std::endl;
+    Show *p=new Show();
+    p->show();
 }
 
 void Manage::quitGame(){
+    std::cout<<"quitGame"<<std::endl;
     isStart=3;
     del_start();
     delete window;
@@ -298,42 +406,51 @@ void Manage::setlayout(){
     std::cout<<"setlayout"<<std::endl;
     QString str1("F:/Lianliankan/game/map2.png");
     QString str2("F:/Lianliankan/game/tip3.png");
+    QString str3("F:/Lianliankan/game/volume1.png");
 
-    std::cout<<"setLayout"<<std::endl;
     window=new QWidget;
     window->setWindowTitle("连连看");
-    window->resize(1200,900);
+    window->resize(1250,900);
 
-    gridlayout=new QGridLayout;//?
+    gridlayout=new QGridLayout;
     hlayout1=new QHBoxLayout;
     vlayout=new QVBoxLayout;
 
+    QPixmap img1(str1),img2(str2),img3(str3);
+    timer=new Displaytime;
+    sound->play();
     changebutton=new QPushButton;
-    QPixmap img1(str1),img2(str2);
     changebutton->setIcon(img1);
-    changebutton->setIconSize(QSize(50,50));//?
-    changebutton->setFlat(true);//?
-
+    changebutton->setIconSize(QSize(50,50));
+    changebutton->setFlat(true);
     tipbutton=new QPushButton;
     tipbutton->setIcon(img2);
-    tipbutton->setFlat(true);
     tipbutton->setIconSize(QSize(50,50));
+    tipbutton->setFlat(true);
+    musicbutton=new QPushButton;
+    musicbutton->setIcon(img3);
+    musicbutton->setIconSize(QSize(50,50));
+    musicbutton->setFlat(true);
+    menubutton=new QPushButton(tr("Menu"));
     if(isAI)aibutton=new QPushButton(tr("人工智能"));
     else{
         aibutton=new QPushButton;
         aibutton->setFlat(true);
     }
-//    timer=new DisplayTime;....................
 
-//    vlayout->addWidget(timer);
+    vlayout->addWidget(timer);
     vlayout->addWidget(changebutton);
     vlayout->addWidget(tipbutton);
+    vlayout->addWidget(musicbutton);
+    vlayout->addWidget(menubutton);
     vlayout->addWidget(aibutton);
 
-//    connect(tipbutton,SIGNAL(clicked()),this,SLOT(show()));
+    connect(tipbutton,SIGNAL(clicked()),this,SLOT(show()));
     connect(tipbutton,SIGNAL(clicked()),this,SLOT(changetext()));
     connect(changebutton,SIGNAL(clicked()),this,SLOT(recreate()));
     connect(changebutton,SIGNAL(clicked()),this,SLOT(changetext2()));
+    connect(musicbutton,SIGNAL(clicked()),this,SLOT(changeMusicVol()));
+    connect(menubutton,SIGNAL(clicked()),this,SLOT(gotoMenu()));
     if(isAI)connect(aibutton,SIGNAL(clicked()),this,SLOT(ai()));
     setblock();
     setimage();
@@ -342,11 +459,11 @@ void Manage::setlayout(){
     QPalette palette;
     palette.setBrush(QPalette::Background,QBrush(QPixmap("F:/Lianliankan/game/background3.jpg")));
     window->setPalette(palette);
-    hlayout1->addLayout(gridlayout);
-    hlayout1->addLayout(vlayout);
+    hlayout1->addLayout(gridlayout);//水平布局设置
+    hlayout1->addLayout(vlayout);//水平布局设置
     window->setLayout(hlayout1);
     window->show();
-    //    judge();
+    judge();
 }
 
 void Manage::setimage()
@@ -498,6 +615,32 @@ void Manage::setblock()
     }
 }
 
+void Manage::gotoMenu()
+{
+    cout<<"gotoMenu"<<endl;
+    del_game();
+    setStartWindow();
+}
+
+void Manage::changeMusicVol()
+{
+    cout<<"changeMusicVol"<<endl;
+    QString str[]={"F:/Lianliankan/game/volume1.png",
+                   "F:/Lianliankan/game/volume2.png"};
+    QPixmap img0(str[0]),img1(str[1]);
+    if(soundnum==1){
+        soundnum++;
+        musicbutton->setIcon(img1);
+        sound->stop();
+    }
+    else if(soundnum==2){
+        soundnum--;
+        musicbutton->setIcon(img0);
+        sound->play();
+
+    }
+}
+
 bool Manage::ok()//判断两个图片能否消去（接口函数）
 {
     std::cout<<"ok"<<std::endl;
@@ -507,8 +650,8 @@ bool Manage::ok()//判断两个图片能否消去（接口函数）
         return false;
     dfs(x1,y1,x2,y2,Null);
     if(flag){
-//        sound->play2();
-//        sound->stop2();
+        sound->play2();
+        sound->stop2();
         return true;
     }
     return false;
@@ -518,10 +661,9 @@ bool Manage::judge()
 {
     std::cout<<"judget"<<std::endl;
     flag=false;
-    static int cnt=1;
     for(int k=1;k<=imagenum;k++){
         for(int i=0;i<num[k]-1;i++){
-            for(int j=i+1;j<num[j];j++){
+            for(int j=i+1;j<num[k];j++){
                 x3=bucket[k][i].x;
                 y3=bucket[k][i].y;
                 x4=bucket[k][j].x;
@@ -541,12 +683,14 @@ void Manage::dfs(int x, int y, int x2, int y2, int type)
 {
     if(flag) return;
     if(count>=3) return;
-    if(x==MaxSizeX+2||x<0||y==MaxSizeY+2||y<0) return;
-    if(x==x2&&y==y2){
+    if(x==MaxSizeX+2||x<0||y==MaxSizeY+2||y<0) return;//点到了边界
+    if(x==x2&&y==y2){//两点位置相同（是在已经执行了后面的语句的基础上）
         flag=true;
         return;
     }
-    if(map[x][y]!=0&&type!=Null) return;//?
+
+
+    if(map[x][y]!=0&&type!=Null) return;//目前走到的位置有块，回溯
     if(type!=Up&&type!=Null){
         count++;
         dfs(x-1,y,x2,y2,Up);
@@ -556,6 +700,8 @@ void Manage::dfs(int x, int y, int x2, int y2, int type)
         dfs(x-1,y,x2,y2,Up);
     }
     if(flag) return;
+
+
     if(type!=Down&&type!=Null){
         count++;
         dfs(x+1,y,x2,y2,Down);
@@ -565,6 +711,8 @@ void Manage::dfs(int x, int y, int x2, int y2, int type)
         dfs(x+1,y,x2,y2,Down);
     }
     if(flag) return;
+
+
     if(type!=Left&&type!=Null){
         count++;
         dfs(x,y-1,x2,y2,Left);
@@ -574,6 +722,7 @@ void Manage::dfs(int x, int y, int x2, int y2, int type)
         dfs(x,y-1,x2,y2,Left);
     }
     if(flag) return;
+
     if(type!=Right&&type!=Null){
         count++;
         dfs(x,y+1,x2,y2,Right);
@@ -588,9 +737,10 @@ void Manage::dfs(int x, int y, int x2, int y2, int type)
 
 void Manage::del(int k, int x, int y)//消掉图片后更新bucket数组
 {
-    int i=1;
+    std::cout<<"del"<<std::endl;
+    int i;
     for(i=0;i<num[k];i++){
-        if(bucket[k][i].x==x&&bucket[k][i].y==y) break;
+        if(bucket[k][i].x==x&&bucket[k][i].y==y) break;//找到i则跳出循环
     }
     for(;i<num[k]-1;i++){
         bucket[k][i].x=bucket[k][i+1].x;
@@ -624,6 +774,7 @@ QPushButton *Manage::createButton(QString &str)
 }
 
 void Manage::changetext(){
+    cout<<"changetext"<<endl;
     QString str[]={"F:/Lianliankan/game/tip0.png",
                    "F:/Lianliankan/game/tip1.png",
                    "F:/Lianliankan/game/tip2.png"};
@@ -643,6 +794,7 @@ void Manage::changetext(){
 }
 
 void Manage::changetext2(){
+    cout<<"changetext2"<<endl;
     QString str[]={"F:/Lianliankan/game/map0.png",
                    "F:/Lianliankan/game/map1.png"};
     QPixmap img0(str[0]),img1(str[1]);

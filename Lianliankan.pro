@@ -12,7 +12,8 @@ HEADERS += \
     class.h \
     button.h \
     displaytime.h \
-    player.h
+    player.h \
+    show.h
 
 SOURCES += \
     game.cpp \
@@ -22,7 +23,9 @@ SOURCES += \
     enter.cpp \
     button.cpp \
     displaytime.cpp \
-    player.cpp
+    player.cpp \
+    show.cpp
 
 RC_ICONS = F:/Lianliankan/pic_manage/myico.ico
+QT += multimedia
 
