@@ -1,5 +1,5 @@
-echo 1000
-liz 2900
-sam 123
 kap 7
-pipip 1222
+hahaha 22
+? 33
+sam 123
+echo 1000

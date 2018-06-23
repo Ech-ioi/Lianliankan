@@ -10,6 +10,8 @@
 #include <QVBoxLayout>
 #include <QLineEdit>
 #include <iostream>
+#include <fstream>
+using namespace  std;
 
 User::User(char* name="NULL",double time=10000)
 {
@@ -44,19 +46,50 @@ void User::point(char *Name, double Time){
     this->time=Time;
 }
 
-//
-//
+
 //游戏结束后的分值处理\游戏结束后读取进行排名
-//
 void User::Game_End(QString qname,double now_time){
     char *ch;
     QByteArray ba=qname.toLatin1();//QString转char*
     ch=ba.data();
 
-    User allname[6];//6个？
+    User allname[6];//只显示5个排名，但是多出一个参数用来保存当前用户
     User temp(ch,now_time);
 
-    //......
+    double Time;
+    char* Name=(char*)malloc(10*sizeof(char));
+    int rank=0;
+
+    ifstream out("F:/Lianliankan/grade/Grade.txt",ios::in);
+    while(out>>Name>>Time){
+        allname[rank].point(Name,Time);
+        if(rank<=5){
+            rank++;
+            Name=(char*)malloc(10);
+        }
+        else
+            break;
+    }
+    out.close();
+    allname[5]=temp;
+
+    //冒泡排序
+    for(int i=0;i<5;i++){
+        for(rank=0;rank<5-i;rank++){
+            if(allname[rank].Get_Time()>allname[rank+1].Get_Time()){
+                temp=allname[rank];
+                allname[rank]=allname[rank+1];
+                allname[rank+1]=temp;
+            }
+        }
+    }
+    ofstream file;
+    file.open("F:/Lianliankan/grade/Grade.txt",ios::out);
+    for(rank=0;rank<5;rank++){
+        file<<allname[rank].Get_Name()<<" "<<allname[rank].Get_Time()<<endl;
+    }
+    file.close();
+
 }
 
 User eUser::user;
@@ -70,7 +103,7 @@ Enter::Enter(QWidget *parent):
 
     startButton=new QPushButton(tr("Start!"));
     startButton->setDefault(true);//绑定键盘的回车键
-    startButton->setEnabled(false);//?
+    startButton->setEnabled(false);
 
     returnButton=new QPushButton(tr("Return"));
 
